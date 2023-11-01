@@ -70,6 +70,12 @@ FormSet >> forms [
 	^ forms
 ]
 
+{ #category : #accessing }
+FormSet >> height [
+
+	^ self extent y
+]
+
 { #category : #'file in/out' }
 FormSet >> hibernate [
 
@@ -89,4 +95,10 @@ FormSet >> initializeWithExtent: initialExtent depth: initialDepth forms: initia
 FormSet >> veryDeepCopyWith: deepCopier [
 	"Return self.  I am immutable in the Morphic world.  Do not record me."
 	^ self
+]
+
+{ #category : #accessing }
+FormSet >> width [
+
+	^ self extent x
 ]

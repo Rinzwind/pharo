@@ -260,7 +260,7 @@ TabSelectorMorph >> leftButtonEnabled [
 TabSelectorMorph >> leftButtonLabel [
 	"Answer the label for a button for scrolling left."
 
-	^AlphaImageMorph new image: (
+	^AlphaImageMorph new formSet: (
 		ScrollBarMorph
 			arrowOfDirection: #left
 			size: self controlButtonWidth - (3* self displayScaleFactor)
@@ -422,7 +422,7 @@ TabSelectorMorph >> rightButtonEnabled [
 TabSelectorMorph >> rightButtonLabel [
 	"Answer the label for a button for scrolling right."
 
-	^AlphaImageMorph new image: (
+	^AlphaImageMorph new formSet: (
 		ScrollBarMorph
 			arrowOfDirection: #right
 			size: self controlButtonWidth - (3 * self displayScaleFactor)

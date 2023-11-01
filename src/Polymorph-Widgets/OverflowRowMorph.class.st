@@ -167,7 +167,7 @@ OverflowRowMorph >> moreButton: anObject [
 OverflowRowMorph >> moreButtonLabel [
 	"Answer the label for the more button."
 
-	^AlphaImageMorph new image: (
+	^AlphaImageMorph new formSet: (
 		ScrollBarMorph
 			arrowOfDirection: #right
 			size: self buttonWidth
