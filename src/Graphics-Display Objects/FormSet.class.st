@@ -4,16 +4,14 @@ A class for representing images for which there can be more than one Form depict
 A FormSet can be converted to a Form with a given extent through #asFormWithExtent: which either returns an element from the FormSet’s forms or converts one of them to the FormSet’s extent and depth. The convenience method #asForm uses the FormSet’s own extent, while the convenience method #asFormAtScale: uses the FormSet’s extent scaled by the given scale.
 "
 Class {
-	#name : 'FormSet',
-	#superclass : 'Object',
+	#name : #FormSet,
+	#superclass : #Object,
 	#instVars : [
 		'extent',
 		'depth',
 		'forms'
 	],
-	#category : 'Graphics-Display Objects-Forms',
-	#package : 'Graphics-Display Objects',
-	#tag : 'Forms'
+	#category : 'Graphics-Display Objects-Forms'
 }
 
 { #category : #'instance creation' }

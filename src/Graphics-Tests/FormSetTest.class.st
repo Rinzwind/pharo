@@ -2,11 +2,9 @@
 SUnit tests for class FormSet
 "
 Class {
-	#name : 'FormSetTest',
-	#superclass : 'ClassTestCase',
-	#category : 'Graphics-Tests-Primitives',
-	#package : 'Graphics-Tests',
-	#tag : 'Primitives'
+	#name : #FormSetTest,
+	#superclass : #ClassTestCase,
+	#category : 'Graphics-Tests-Primitives'
 }
 
 { #category : #asserting }
