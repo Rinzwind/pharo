@@ -77,6 +77,12 @@ Canvas >> draw: anObject [
 ]
 
 { #category : #'drawing - images' }
+Canvas >> drawFormSet: formSet at: point [
+
+	^ self drawImage: formSet asForm at: point
+]
+
+{ #category : #'drawing - images' }
 Canvas >> drawImage: aForm at: aPoint [
 	"Draw the given Form, which is assumed to be a Form or ColorForm"
 
@@ -709,6 +715,12 @@ Canvas >> translateTo: newOrigin clippingTo: aRectangle during: aBlock [
 	self translateBy: newOrigin - self origin
 		clippingTo: (aRectangle translateBy: self origin negated)
 		during: aBlock
+]
+
+{ #category : #'drawing - images' }
+Canvas >> translucentFormSet: formSet at: point [
+
+	^ self translucentImage: formSet asForm at: point
 ]
 
 { #category : #'drawing - images' }

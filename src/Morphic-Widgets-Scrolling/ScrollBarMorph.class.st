@@ -30,8 +30,8 @@ Class {
 
 { #category : #images }
 ScrollBarMorph class >> arrowOfDirection: aSymbol size: finalSizeInteger color: aColor [
-	"answer a form with an arrow based on the parameters"
-	^ ArrowImagesCache at: {aSymbol. finalSizeInteger. aColor}
+
+	^ (self formSetArrowOfDirection: aSymbol size: finalSizeInteger color: aColor) asForm
 ]
 
 { #category : #'images - samples' }
@@ -117,6 +117,12 @@ ScrollBarMorph class >> cleanUp [
 	"Re-initialize the image cache"
 
 	self initializeImagesCache
+]
+
+{ #category : #images }
+ScrollBarMorph class >> formSetArrowOfDirection: aSymbol size: finalSizeInteger color: aColor [
+	"answer a FormSet with an arrow based on the parameters"
+	^ ArrowImagesCache at: {aSymbol. finalSizeInteger. aColor}
 ]
 
 { #category : #'class initialization' }
@@ -231,9 +237,9 @@ ScrollBarMorph >> doScrollUp [
 
 { #category : #initialize }
 ScrollBarMorph >> downImage [
-	"answer a form to be used in the down button"
+	"answer a FormSet to be used in the down button"
 	^ self class
-		arrowOfDirection: (bounds isWide
+		formSetArrowOfDirection: (bounds isWide
 				ifTrue: [#right]
 				ifFalse: [#bottom])
 		size: (self buttonExtent x min: self buttonExtent y)
@@ -1010,9 +1016,9 @@ ScrollBarMorph >> totalSliderArea [
 
 { #category : #initialize }
 ScrollBarMorph >> upImage [
-	"answer a form to be used in the up button"
+	"answer a FormSet to be used in the up button"
 	^ self class
-		arrowOfDirection: (bounds isWide
+		formSetArrowOfDirection: (bounds isWide
 				ifTrue: [#left]
 				ifFalse: [#top])
 		size: (self buttonExtent x min: self buttonExtent y)
@@ -1031,7 +1037,7 @@ ScrollBarMorph >> updateDownButtonImage [
 	"update the receiver's downButton.  put a new image inside"
 	downButton removeAllMorphs.
 	downButton
-		addMorphCentered: (ImageMorph new form: self downImage)
+		addMorphCentered: (ImageMorph new formSet: self downImage)
 ]
 
 { #category : #update }
@@ -1064,7 +1070,7 @@ ScrollBarMorph >> updateUpButtonImage [
 "update the receiver's upButton. put a new image inside"
 	upButton removeAllMorphs.
 	upButton
-		addMorphCentered: (ImageMorph new form: self upImage)
+		addMorphCentered: (ImageMorph new formSet: self upImage)
 ]
 
 { #category : #'scroll timing' }

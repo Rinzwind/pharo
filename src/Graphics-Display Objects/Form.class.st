@@ -2073,6 +2073,16 @@ f display
 ]
 
 { #category : #'scaling, rotation' }
+Form >> scaledToExactSize: newExtent [
+
+	| scale |
+
+	newExtent = self extent ifTrue: [^self].
+	scale := newExtent / self extent.
+	^self magnifyBy: scale smoothing: 2
+]
+
+{ #category : #'scaling, rotation' }
 Form >> scaledToSize: newExtent [
 
 	| scale |
