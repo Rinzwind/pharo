@@ -114,12 +114,6 @@ PluggableCanvas >> flush [
 		c flush ]
 ]
 
-{ #category : #other }
-PluggableCanvas >> flushDisplay [
-	self apply: [ :c |
-		c flushDisplay ]
-]
-
 { #category : #'drawing - rectangles' }
 PluggableCanvas >> frameAndFillRectangle: r fillColor: fillColor borderWidth: borderWidth borderColor: borderColor [
 	self apply: [ :c |
@@ -166,12 +160,6 @@ PluggableCanvas >> paintImage: aForm at: aPoint sourceRect: sourceRect [
 PluggableCanvas >> paragraph: paragraph bounds: bounds color: color [
 	self apply: [ :c |
 		c paragraph: paragraph bounds: bounds color: color ]
-]
-
-{ #category : #drawing }
-PluggableCanvas >> render: anObject [
-	self apply: [ :c |
-		c render: anObject ]
 ]
 
 { #category : #'drawing - general' }
