@@ -84,7 +84,7 @@ ClyMainItemCellMorph >> addBarForLabelIndentation [
 ClyMainItemCellMorph >> addExtraIcon: iconName [
 
 	| icon |
-	icon := self iconNamed: iconName.
+	icon := self iconFormSetNamed: iconName.
 	^self addExtraTool: icon asMorph
 ]
 
@@ -177,7 +177,7 @@ ClyMainItemCellMorph >> currentExpansionButton [
 ClyMainItemCellMorph >> definitionIcon: iconName [
 
 	| icon |
-	icon := self iconNamed: iconName.
+	icon := self iconFormSetNamed: iconName.
 	^self definitionMorph: icon asMorph
 ]
 
