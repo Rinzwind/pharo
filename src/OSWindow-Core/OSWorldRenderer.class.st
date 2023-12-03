@@ -11,8 +11,23 @@ Class {
 		'windowCloseAction',
 		'previousFrameRenderingTime'
 	],
+	#classInstVars : [
+		'canvasScaleFactor'
+	],
 	#category : #'OSWindow-Core-Morphic'
 }
+
+{ #category : #accessing }
+OSWorldRenderer class >> canvasScaleFactor [
+
+	^ canvasScaleFactor ifNil: [ canvasScaleFactor := 1 ]
+]
+
+{ #category : #accessing }
+OSWorldRenderer class >> canvasScaleFactor: newScale [
+
+	canvasScaleFactor := 1 max: newScale asInteger
+]
 
 { #category : #accessing }
 OSWorldRenderer class >> defaultExtent [
@@ -32,6 +47,19 @@ OSWorldRenderer class >> priority [
 	^ 2
 ]
 
+{ #category : #settings }
+OSWorldRenderer class >> settingsOn: aBuilder [
+
+	<systemsettings>
+
+	(aBuilder pickOne: #canvasScaleFactor)
+		parent: #appearance;
+		label: 'Canvas scale factor for OSWorldRenderer';
+		target: self;
+		domainValues: (1 to: 5);
+		default: 1
+]
+
 { #category : #accessing }
 OSWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 
@@ -43,8 +71,20 @@ OSWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 ]
 
 { #category : #accessing }
+OSWorldRenderer >> actualDisplaySize [
+
+	^ self actualScreenSize * self canvasScaleFactor
+]
+
+{ #category : #accessing }
 OSWorldRenderer >> actualScreenSize [
 	^ (self windowExtent / self screenScaleFactor) ceiling max: 1@1
+]
+
+{ #category : #private }
+OSWorldRenderer >> canvasScaleFactor [
+
+	^ self class canvasScaleFactor
 ]
 
 { #category : #events }
@@ -57,10 +97,10 @@ OSWorldRenderer >> checkForNewScreenSize [
 	windowRenderer := self osWindowRenderer.
 	windowRenderer ifNil: [ ^ self ].
 
-	(display isNil or: [ display extent = self actualScreenSize ])
+	(display isNil or: [ display extent = self actualDisplaySize ])
 		ifTrue: [ ^ self ].
 
-	display := Form extent: self actualScreenSize depth: 32.
+	display := Form extent: self actualDisplaySize depth: 32.
 	windowRenderer form: display.
 
 	world worldState realWindowExtent: self actualScreenSize.
@@ -87,14 +127,22 @@ OSWorldRenderer >> convertWindowMouseEventPosition: aPosition [
 { #category : #screenshot }
 OSWorldRenderer >> copyRectangle: aRectangle into: aForm [
 
-	aForm
-		copyBits: (aRectangle origin extent: aForm extent)
+	| scale copiedForm |
+
+	scale := self canvasScaleFactor.
+	copiedForm := scale = 1
+		ifTrue: [ aForm ]
+		ifFalse: [ Form extent: aForm extent * scale depth: aForm depth ].
+	copiedForm
+		copyBits: (aRectangle origin floor * scale extent: copiedForm extent)
 		from: display
 		at: 0 @ 0
-		clippingBox: aForm boundingBox
+		clippingBox: copiedForm boundingBox
 		rule: Form over
 		fillColor: nil.
-
+	scale = 1 ifFalse: [
+		(copiedForm scaledToSize: aForm extent)
+			contentsOfArea: aForm boundingBox into: aForm ].
 	^ aForm
 ]
 
@@ -124,7 +172,7 @@ OSWorldRenderer >> doActivate [
 		windowCentered:true;
 		icon: (self iconNamed: #pharoBig).
 
-	display := Form extent: initialExtent depth: 32.
+	display := Form extent: initialExtent * self canvasScaleFactor depth: 32.
 	world extent: initialExtent.
 
 	driver := self pickMostSuitableWindowDriver.
@@ -181,7 +229,7 @@ OSWorldRenderer >> drawWhileProfilingRenderingTimeDuring: aBlock [
 					canvas drawString: line at: 10@(10*index) font: nil color: Color black.
 				].
 
-				self osWindowRenderer updateRectangle: displayRectangle.
+				self osWindowRenderer updateRectangle: (displayRectangle scaleBy: self canvasScaleFactor).
 			]
 		]
 	] timeToRunWithoutGC.
@@ -273,8 +321,12 @@ OSWorldRenderer >> startUp: resuming [
 { #category : #operations }
 OSWorldRenderer >> updateDamage: allDamage [
 
+	| scale scaledDamage |
+
+	scale := self canvasScaleFactor.
+	scaledDamage := scale = 1 ifTrue: [ allDamage ] ifFalse: [ allDamage collect: [ :rectangle | rectangle scaleBy: scale ] ].
 	"quickly copy altered rects of canvas to Display:"
-	self osWindowRenderer updateAreas: allDamage immediate: false
+	self osWindowRenderer updateAreas: scaledDamage immediate: false
 ]
 
 { #category : #events }

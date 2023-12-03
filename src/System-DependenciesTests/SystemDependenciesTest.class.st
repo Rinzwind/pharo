@@ -100,7 +100,7 @@ SystemDependenciesTest >> knownMorphicCoreDependencies [
 
 	"ideally this list should be empty"
 
-	^ #(#'Keymapping-KeyCombinations' #'Refactoring-Critics' #'Refactoring-Environment')
+	^ #(#'Fonts-Infrastructure' #'FreeType' #'Keymapping-KeyCombinations' #'Morphic-Base' #'Refactoring-Critics' #'Refactoring-Environment')
 ]
 
 { #category : #'known dependencies' }
