@@ -1233,7 +1233,9 @@ PolymorphSystemSettings class >> pharoLogoForm [
 { #category : 'desktop' }
 PolymorphSystemSettings class >> pharoLogoFormSet [
 	^ FormSet forms: ({ self pharoLogoContents1. self pharoLogoContents2 }
-		collect: [ :contents | Form fromBinaryStream: contents base64Decoded readStream ])
+		collect: [ :contents |
+			(Form fromBinaryStream: contents base64Decoded readStream) collectColors: [ :color |
+				color alpha > 0 ifTrue: [ color / color alpha ] ifFalse: [ color ] ] ])
 ]
 
 { #category : 'desktop' }
