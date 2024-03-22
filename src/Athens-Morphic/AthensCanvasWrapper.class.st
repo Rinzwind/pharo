@@ -163,6 +163,12 @@ AthensCanvasWrapper >> draw: anObject [
 ]
 
 { #category : #'canvas drawing - images' }
+AthensCanvasWrapper >> drawFormSet: formSet at: point [
+
+	^ self drawImage: formSet asForm at: point
+]
+
+{ #category : #'canvas drawing - images' }
 AthensCanvasWrapper >> drawImage: aForm at: aPoint [
 	"Draw the given Form, which is assumed to be a Form or ColorForm"
 
@@ -547,6 +553,12 @@ AthensCanvasWrapper >> translateBy: offset clippingTo: aRect during: aBlock [
 { #category : #'canvas drawing - support' }
 AthensCanvasWrapper >> translateBy: offset during: aBlock [
 	^ self copyOrigin: origin + offset clipRect: self clipRect
+]
+
+{ #category : #'canvas drawing - images' }
+AthensCanvasWrapper >> translucentFormSet: formSet at: point [
+
+	^ self translucentImage: formSet asForm at: point
 ]
 
 { #category : #'canvas drawing - images' }
