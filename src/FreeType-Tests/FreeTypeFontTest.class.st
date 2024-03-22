@@ -1,9 +1,7 @@
 Class {
-	#name : 'FreeTypeFontTest',
-	#superclass : 'TestCase',
-	#category : 'FreeType-Tests-Fonts',
-	#package : 'FreeType-Tests',
-	#tag : 'Fonts'
+	#name : #FreeTypeFontTest,
+	#superclass : #TestCase,
+	#category : #'FreeType-Tests-Fonts'
 }
 
 { #category : #tests }
