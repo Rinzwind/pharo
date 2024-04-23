@@ -61,6 +61,12 @@ OSWindowFormRenderer >> newExtent: newExtent [
 ]
 
 { #category : #accessing }
+OSWindowFormRenderer >> outputExtent [
+
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
 OSWindowFormRenderer >> pixelExtent [
 	^ form ifNotNil: [ form extent ] ifNil: [ 1@1 ]
 ]
