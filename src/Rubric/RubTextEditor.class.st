@@ -1693,21 +1693,23 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 		index := index + 1 ].
 
 	initialIsAlphaNumeric := self isWordCharacterAt: index in: string.
-
-	index = initialPosition ifTrue: [ index := index + 1 ].
-
-	[
-	| nextCharacterInDirection |
+	
+	
+	index = initialPosition
+		ifTrue: [ index := index + 1 ].
+	
+	[ | nextCharacterInDirection |
 	"If we reach the end"
 	index >= size ifTrue: [ ^ index ].
-
+	
 	nextCharacterInDirection := string at: index.
-	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
-
-	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
-		^ index ].
-
-	(self isWordCharacterAt: index in: string) = initialIsAlphaNumeric ]
+	nextCharacterInDirection = Character cr
+		ifTrue: [ ^ index ].
+	
+		(self
+			 isWordCharacterAt: index
+			 in: string
+			 except: [ :char | stopOnUpperCase and: [ char isUppercase ] ]) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index + 1 ].
 
 	^ index
@@ -1860,39 +1862,39 @@ RubTextEditor >> previousWord: position [
 ]
 
 { #category : 'private' }
-RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [
+RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [ 
 
 	| string index initialIsAlphaNumeric size initialPosition |
 	"Positions go from 1 to size + 1
 	Position N + 1 is after the Nth character"
 	string := self string.
 	size := string size + 1.
+
 	initialPosition := size min: position.
 	index := initialPosition.
 
 	position <= 2 ifTrue: [ ^ 1 ].
-	[
-	index > 0 and: [
-		{
-			Character space.
-			Character tab } includes: (string at: index - 1) ] ] whileTrue: [
-		index := index - 1 ].
+
+
+	[ index > 0 and: [ 
+			{ Character space . Character tab }
+				includes: (string at: index - 1)]
+	] whileTrue: [ index := index - 1 ].
+
 	initialIsAlphaNumeric := self isWordCharacterAt: index - 1 in: string.
 
-	index = initialPosition ifTrue: [ index := index - 1 ].
+	index = initialPosition
+		ifTrue: [ index := index - 1 ].
 
-	[
-	| nextCharacterInDirection |
+	[ | nextCharacterInDirection |
 	"If we reach the end"
 	index <= 1 ifTrue: [ ^ index ].
 
 	nextCharacterInDirection := string at: index - 1.
-	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
+	nextCharacterInDirection = Character cr
+		ifTrue: [ ^ index ].
 
-	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
-		^ index ].
-
-	(self isWordCharacterAt: index - 1 in: string) = initialIsAlphaNumeric ]
+	(self isWordCharacterAt: index in: string except: [ :char | stopOnUpperCase and: [ char isUppercase ] ]) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index - 1 ].
 	^ index
 ]
