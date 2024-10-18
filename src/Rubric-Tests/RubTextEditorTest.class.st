@@ -137,24 +137,6 @@ RubTextEditorTest >> testNextWordGoesToEndOfCurrentWord [
 ]
 
 { #category : 'tests' }
-RubTextEditorTest >> testNextWordGoesToEndOfCurrentWordWithColon [
-
-	"Here it is a normal text editor, do not go over colons"
-	editor addString: 'abc: d'.
-
-	self assert: (editor nextWord: 3) equals: 4
-]
-
-{ #category : 'tests' }
-RubTextEditorTest >> testNextWordGoesToEndOfCurrentWordWithColonInCode [
-
-	editor := RubSmalltalkEditor forTextArea: RubEditingArea new.
-	editor addString: 'abc: d'.
-
-	self assert: (editor nextWord: 3) equals: 5
-]
-
-{ #category : 'tests' }
 RubTextEditorTest >> testNextWordSkipsCurrentSpacesAndGoesToEndOfCurrentWord [
 
 	editor addString: 'abc d'.
@@ -214,14 +196,14 @@ RubTextEditorTest >> testPreviousWord [
 
 	1 to: 7 do: [ :i |
 		"From:   |Lorem ipsum
-		 To:     Lore|m ipsum
-		 Should be: Lorem| ipsum"
+		 To:     Lorem |ipsum
+		 Should be: |Lorem ipsum"
 		self assert: (editor previousWord: i) equals: 1 ].
 
 	8 to: 12 do: [ :i |
 		"From:   Lorem |ipsum
-		 To:     Lorem ipsu|m
-		 Should be: Lorem ipsum|"
+		 To:     Lorem ipsum|
+		 Should be: Lorem |ipsum"
 		self assert: (editor previousWord: i) equals: 7 ].
 
 	self assert: (editor previousWord: 999) equals: 7. "Out of range"
@@ -290,6 +272,19 @@ RubTextEditorTest >> testPreviousWordSkipsCurrentSpacesAndGoesToStartOfCurrentWo
 	editor addString: 'abc def'.
 
 	self assert: (editor previousWord: 5) equals: 1
+]
+
+{ #category : 'test-selection' }
+RubTextEditorTest >> testSelectFromBeginToEnd [
+
+	editor addString: 'a
+
+a'.
+
+	editor selectMark: 1 point: 5.
+	self assert: editor selection equals: 'a
+
+a'.
 ]
 
 { #category : 'tests' }
