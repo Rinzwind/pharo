@@ -15,7 +15,7 @@ BaselineOfPharo class >> beautifulComments [
 		newName: 'BeautifulComments' 
 		owner: 'pillar-markup' 
 		project: 'BeautifulComments' 
-		version: 'v1.0.0'
+		version: 'v1.0.1'
 ]
 
 { #category : #'repository urls' }
