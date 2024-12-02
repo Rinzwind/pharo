@@ -158,24 +158,21 @@ RubTextEditorTest >> testNextWordStopOnUpperCase [
 	self assert: (editor nextWord: -999 stopOnUpperCase: true) equals: 3. "Out of range means start of text"
 	self assert: (editor nextWord: 0 stopOnUpperCase: true) equals: 3. "Out of range means start of text"
 
-	1 to: 3 do: [ :i |
+	1 to: 2 do: [ :i |
 		"From:   |loRem ipSum 
 		 To:     lo|Rem ipSum 
 		 Should be: lo|Rem ipSum "
 		self assert: (editor nextWord: i stopOnUpperCase: true) equals: 3 ].
 
-	4 to: 5 do: [ :i |
+	3 to: 5 do: [ :i |
 		"From:   loR|em ipSum 
 		 To:     loRe|m ipSum 
 		 Should be: loRem| ipSum "
 		self assert: (editor nextWord: i stopOnUpperCase: true) equals: 6 ].
 
 
-	"Lorem| ipsum >> Lorem |ipsum"
-	self assert: (editor nextWord: 6 stopOnUpperCase: true) equals: 7.
-
-	7 to: 8 do: [ :i |
-		"From:   loRem |ipSum 
+	6 to: 8 do: [ :i |
+		"From:   loRem| ipSum 
 		 To:     loRem i|pSum 
 		 Should be: loRem ip|Sum "
 		self assert: (editor nextWord: i stopOnUpperCase: true) equals: 9 ].
