@@ -669,9 +669,12 @@ RubTextEditor >> cursorLeft: aKeyboardEvent [
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
 	self
-		moveCursor:[:position | position - 1 max: 1]
+		moveCursor: [ :position | position - 1 max: 1 ]
 		forward: false
-		specialBlock:[:position | self previousWord: position]
+		specialBlock: [ :position |
+			self
+				previousWord: position
+				stopOnUpperCase: aKeyboardEvent optionKeyPressed ]
 		event: aKeyboardEvent.
 	^ true
 ]
@@ -718,9 +721,12 @@ RubTextEditor >> cursorRight: aKeyboardEvent [
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
 	self
-		moveCursor: [:position | position + 1]
+		moveCursor: [ :position | position + 1 ]
 		forward: true
-		specialBlock:[:position | self nextWord: position]
+		specialBlock: [ :position |
+			self
+				nextWord: position
+				stopOnUpperCase: aKeyboardEvent optionKeyPressed ]
 		event: aKeyboardEvent.
 	^ true
 ]
@@ -1436,6 +1442,16 @@ RubTextEditor >> isWordCharacterAt: index in: aString [
 	^ (aString at: index) isAlphaNumeric
 ]
 
+{ #category : 'private' }
+RubTextEditor >> isWordCharacterAt: index in: aString except: aBlock [
+	"By default, group alphanumeric and non-alphanumeric separately"
+
+	| character |
+	character := aString at: index.
+	(aBlock value: character) ifTrue: [ ^ false ].
+	^ character isAlphaNumeric
+]
+
 { #category : 'typing support' }
 RubTextEditor >> keyDown: aKeyboardEvent [
 	textArea announce: ((RubKeystroke with: aKeyboardEvent) morph: self).
@@ -1695,6 +1711,31 @@ RubTextEditor >> nextWord: position [
 	^ index
 ]
 
+{ #category : 'private' }
+RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
+	"Positions go from 1 to size + 1
+	Position N + 1 is after the Nth character"
+
+	| string index initialIsAlphaNumeric size |
+	index := 1 max: position.
+
+	string := self string.
+	size := string size + 1.
+	position >= size ifTrue: [ ^ size ].
+
+	initialIsAlphaNumeric := self isWordCharacterAt: index in: string.
+
+	[
+	index < size and: [
+		(self
+			 isWordCharacterAt: index
+			 in: string
+			 except: [ :char | stopOnUpperCase and: [ char isUppercase ] ])
+		= initialIsAlphaNumeric ] ] whileTrue: [ index := index + 1 ].
+
+	^ index
+]
+
 { #category : 'editing keys' }
 RubTextEditor >> noop: aKeyboardEvent [
 	"Unimplemented keyboard command; just ignore it."
@@ -1870,6 +1911,42 @@ RubTextEditor >> previousWord: position [
 	(self isWordCharacterAt: index - 1 in: string) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index - 1 ].
 
+	^ index
+]
+
+{ #category : 'private' }
+RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [ 
+
+	| string index size beforeCaretIsAlpha afterCaretIsAlpha |
+	"The main strategy behind this is to move the caret backwards until there is a alpha/nonalpha or nonalpha/alpha pair.
+	To avoid staying in the same place, we need always move the character at least once before checking the condition"
+
+	position <= 2 ifTrue: [ ^ 1 ].
+	string := self string.
+	size := string size.
+
+	"If we ask for the word starting after the string, start at the end of the string.
+	Remember that there are N+1 caret positions for a N-sized string."
+	index := (size + 1) min: position.
+
+	"Go backwards once and check if character before the caret is alphanumeric.
+	If not alphanumeric, we go backwards once more.
+	This handles the case when the caret is after the first character of a word, in which case we should just go once backwards.
+	All other cases should go backwards more than once."
+	index := index - 1.
+	beforeCaretIsAlpha := index = 1 or: [
+		                      self isWordCharacterAt: index in: string ].
+	beforeCaretIsAlpha ifFalse: [
+		index := index - 1 ].
+
+	"Finally, iterate backwards until the alphanumericness before and after the caret changes"
+	[
+	afterCaretIsAlpha := beforeCaretIsAlpha := index = 1 or: [
+		                      self isWordCharacterAt: index in: string except: [ :char | stopOnUpperCase and: [ char isUppercase ] ] ].
+	beforeCaretIsAlpha := index = 1 or: [
+		                      self isWordCharacterAt: index - 1 in: string ].
+	beforeCaretIsAlpha = afterCaretIsAlpha and: [ index > 1 ] ]
+		whileTrue: [ index := index - 1 ].
 	^ index
 ]
 
