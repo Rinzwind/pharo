@@ -141,6 +141,24 @@ RubTextEditorTest >> testNextWordGoesToEndOfCurrentWord [
 ]
 
 { #category : 'tests' }
+RubTextEditorTest >> testNextWordGoesToEndOfCurrentWordWithColon [
+
+	"Here it is a normal text editor, do not go over colons"
+	editor addString: 'abc: d'.
+
+	self assert: (editor nextWord: 3) equals: 4
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testNextWordGoesToEndOfCurrentWordWithColonInCode [
+
+	editor := RubSmalltalkEditor forTextArea: RubEditingArea new.
+	editor addString: 'abc: d'.
+
+	self assert: (editor nextWord: 3) equals: 5
+]
+
+{ #category : 'tests' }
 RubTextEditorTest >> testNextWordSkipsCurrentSpacesAndGoesToEndOfCurrentWord [
 
 	editor addString: 'abc d'.

@@ -1710,7 +1710,7 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
 		^ index ].
 
-	(string at: index) isAlphaNumeric = initialIsAlphaNumeric ]
+	(self isWordCharacterAt: index in: string) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index + 1 ].
 
 	^ index

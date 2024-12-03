@@ -28,7 +28,8 @@ CompletionEngineTest >> editorTextWithCaret [
 
 	| source |
 	source := editor text asString.
-	^ (source copyFrom: 1 to: editor caret-1), '|', (source copyFrom: editor caret to: source size)
+	^ (source copyFrom: 1 to: editor caret - 1) , '|'
+	  , (source copyFrom: editor caret to: source size)
 ]
 
 { #category : 'accessing' }
