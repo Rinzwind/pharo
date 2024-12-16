@@ -1270,7 +1270,7 @@ Object >> isVariableBinding [
 { #category : 'comparing' }
 Object >> literalEqual: other [
 
-	^ self class == other class and: [self = other]
+	^ self == other
 ]
 
 { #category : 'printing' }
