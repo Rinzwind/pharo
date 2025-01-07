@@ -1677,22 +1677,38 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 	"Positions go from 1 to size + 1
 	Position N + 1 is after the Nth character"
 
-	| string index initialIsAlphaNumeric size |
-	index := 1 max: position.
+	| string index initialIsAlphaNumeric size initialPosition |
+	initialPosition := 1 max: position.
+	index := initialPosition.
 
 	string := self string.
 	size := string size + 1.
 	position >= size ifTrue: [ ^ size ].
 
+	[
+	index < string size and: [
+		{
+			Character space.
+			Character tab } includes: (string at: index) ] ] whileTrue: [
+		index := index + 1 ].
+
 	initialIsAlphaNumeric := self isWordCharacterAt: index in: string.
 
+	index = initialPosition ifTrue: [ index := index + 1 ].
+
 	[
-	index < size and: [
-		(self
-			 isWordCharacterAt: index
-			 in: string
-			 except: [ :char | stopOnUpperCase and: [ char isUppercase ] ])
-		= initialIsAlphaNumeric ] ] whileTrue: [ index := index + 1 ].
+	| nextCharacterInDirection |
+	"If we reach the end"
+	index >= size ifTrue: [ ^ index ].
+
+	nextCharacterInDirection := string at: index.
+	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
+
+	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
+		^ index ].
+
+	(self isWordCharacterAt: index in: string) = initialIsAlphaNumeric ]
+		whileTrue: [ index := index + 1 ].
 
 	^ index
 ]
@@ -1844,37 +1860,39 @@ RubTextEditor >> previousWord: position [
 ]
 
 { #category : 'private' }
-RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [ 
+RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [
 
-	| string index size beforeCaretIsAlpha afterCaretIsAlpha |
-	"The main strategy behind this is to move the caret backwards until there is a alpha/nonalpha or nonalpha/alpha pair.
-	To avoid staying in the same place, we need always move the character at least once before checking the condition"
+	| string index initialIsAlphaNumeric size initialPosition |
+	"Positions go from 1 to size + 1
+	Position N + 1 is after the Nth character"
+	string := self string.
+	size := string size + 1.
+	initialPosition := size min: position.
+	index := initialPosition.
 
 	position <= 2 ifTrue: [ ^ 1 ].
-	string := self string.
-	size := string size.
-
-	"If we ask for the word starting after the string, start at the end of the string.
-	Remember that there are N+1 caret positions for a N-sized string."
-	index := (size + 1) min: position.
-
-	"Go backwards once and check if character before the caret is alphanumeric.
-	If not alphanumeric, we go backwards once more.
-	This handles the case when the caret is after the first character of a word, in which case we should just go once backwards.
-	All other cases should go backwards more than once."
-	index := index - 1.
-	beforeCaretIsAlpha := index = 1 or: [
-		                      self isWordCharacterAt: index in: string ].
-	beforeCaretIsAlpha ifFalse: [
-		index := index - 1 ].
-
-	"Finally, iterate backwards until the alphanumericness before and after the caret changes"
 	[
-	afterCaretIsAlpha := beforeCaretIsAlpha := index = 1 or: [
-		                      self isWordCharacterAt: index in: string except: [ :char | stopOnUpperCase and: [ char isUppercase ] ] ].
-	beforeCaretIsAlpha := index = 1 or: [
-		                      self isWordCharacterAt: index - 1 in: string ].
-	beforeCaretIsAlpha = afterCaretIsAlpha and: [ index > 1 ] ]
+	index > 0 and: [
+		{
+			Character space.
+			Character tab } includes: (string at: index - 1) ] ] whileTrue: [
+		index := index - 1 ].
+	initialIsAlphaNumeric := self isWordCharacterAt: index - 1 in: string.
+
+	index = initialPosition ifTrue: [ index := index - 1 ].
+
+	[
+	| nextCharacterInDirection |
+	"If we reach the end"
+	index <= 1 ifTrue: [ ^ index ].
+
+	nextCharacterInDirection := string at: index - 1.
+	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
+
+	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
+		^ index ].
+
+	(self isWordCharacterAt: index - 1 in: string) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index - 1 ].
 	^ index
 ]
