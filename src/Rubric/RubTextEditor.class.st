@@ -441,6 +441,27 @@ RubTextEditor >> changeLfToCr: aKeyboardEvent [
 	^ true
 ]
 
+{ #category : 'accessing' }
+RubTextEditor >> characterGroupAt: index in: aString [
+
+	| character |
+	character := aString at: index.
+
+	character isSeparator ifTrue: [ ^ #separator ].
+	character isAlphaNumeric ifTrue: [
+		character isUppercase
+			ifTrue: [ ^ #upper ]
+			ifFalse: [ ^ #lower ] ].
+
+	"exclude '|<>=' from the syntax and consider them binary"
+	(('^"''[](){}$#;:.' includes: character) or: [
+		 character = $= and: [ (aString at: (index - 1 max: 1)) = $: ] ]) 
+			ifTrue: [ ^ #syntax ].
+
+
+	^ #binary
+]
+
 { #category : 'menu messages' }
 RubTextEditor >> chooseAlignment [
 	self changeAlignment
@@ -1667,6 +1688,34 @@ RubTextEditor >> nextCharacterIfAbsent: aBlock [
 ]
 
 { #category : 'private' }
+RubTextEditor >> nextWord2: position stopOnUpperCase: stopOnUpperCase [
+	"Positions go from 1 to size + 1
+	Position N + 1 is after the Nth character"
+
+	| string index size initialGroup finalGroup |
+	index := 1 max: position.
+	string := self string.
+	size := string size + 1.
+	position >= size ifTrue: [ ^ size ].
+
+
+	initialGroup := self wordGroupAt: index in: string.
+	index := index + 1.
+	initialGroup = #upper ifTrue: [
+		(self wordGroupAt: index in: string) = #lower ifTrue: [ initialGroup := #lower ] ].
+
+	[
+	index < size and: [ (finalGroup := self wordGroupAt: index in: string) = initialGroup ] ]
+		whileTrue: [ index := index + 1 ].
+
+	(initialGroup = #upper and: [ finalGroup = #lower ]) ifTrue: [ 
+		"Moving to the right from upper to lower, we want to stop in the last upper"
+		index := index - 1 ].
+
+	^ index
+]
+
+{ #category : 'private' }
 RubTextEditor >> nextWord: position [
 
 	^ self nextWord: position stopOnUpperCase: false
@@ -1678,9 +1727,7 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 	Position N + 1 is after the Nth character"
 
 	| string index initialIsAlphaNumeric size initialPosition |
-	initialPosition := 1 max: position.
-	index := initialPosition.
-
+	index := initialPosition := 1 max: position.
 	string := self string.
 	size := string size + 1.
 	position >= size ifTrue: [ ^ size ].
@@ -1693,21 +1740,23 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 		index := index + 1 ].
 
 	initialIsAlphaNumeric := self isWordCharacterAt: index in: string.
-
-	index = initialPosition ifTrue: [ index := index + 1 ].
-
-	[
-	| nextCharacterInDirection |
+	
+	
+	index = initialPosition
+		ifTrue: [ index := index + 1 ].
+	
+	[ | nextCharacterInDirection |
 	"If we reach the end"
 	index >= size ifTrue: [ ^ index ].
-
+	
 	nextCharacterInDirection := string at: index.
-	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
-
-	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
-		^ index ].
-
-	(self isWordCharacterAt: index in: string) = initialIsAlphaNumeric ]
+	nextCharacterInDirection = Character cr
+		ifTrue: [ ^ index ].
+	
+		(self
+			 isWordCharacterAt: index
+			 in: string
+			 except: [ :char | stopOnUpperCase and: [ char isUppercase ] ]) = initialIsAlphaNumeric ]
 		whileTrue: [ index := index + 1 ].
 
 	^ index
@@ -1854,45 +1903,77 @@ RubTextEditor >> previousCharacterIfAbsent: aBlock [
 ]
 
 { #category : 'private' }
+RubTextEditor >> previousWord2: position stopOnUpperCase: stopOnUpperCase [
+	"Positions go from 1 to size + 1
+	Position N + 1 is after the Nth character"
+
+	| string index size initialGroup finalGroup |
+	position <= 2 ifTrue: [ ^ 1 ].
+	string := self string.
+	size := string size.
+
+	index := position - 1.
+
+	initialGroup := self wordGroupAt: index in: string.
+	initialGroup = #upper ifTrue: [
+		(self wordGroupAt: index in: string) = #lower ifTrue: [ initialGroup := #lower ] ].
+
+	[
+	index <= 1 and: [ (finalGroup := self wordGroupAt: index in: string) = initialGroup ] ]
+		whileTrue: [ index := index - 1 ].
+
+	(initialGroup = #upper and: [ finalGroup = #lower ]) ifTrue: [ 
+		"Moving to the right from upper to lower, we want to stop in the last upper"
+		index := index - 1 ].
+
+	^ index
+]
+
+{ #category : 'private' }
 RubTextEditor >> previousWord: position [
 
 	^ self previousWord: position stopOnUpperCase: false
 ]
 
 { #category : 'private' }
-RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [
+RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [ 
 
-	| string index initialIsAlphaNumeric size initialPosition |
+	| string index size initialPosition beforeCaretIsAlpha afterCaretIsAlpha nextCharacterInDirection |
 	"Positions go from 1 to size + 1
 	Position N + 1 is after the Nth character"
 	string := self string.
 	size := string size + 1.
+
 	initialPosition := size min: position.
 	index := initialPosition.
 
 	position <= 2 ifTrue: [ ^ 1 ].
-	[
-	index > 0 and: [
-		{
-			Character space.
-			Character tab } includes: (string at: index - 1) ] ] whileTrue: [
-		index := index - 1 ].
-	initialIsAlphaNumeric := self isWordCharacterAt: index - 1 in: string.
 
-	index = initialPosition ifTrue: [ index := index - 1 ].
+	"Go always at least once backwards to guarantee progress"
+	index := index - 1.
+	afterCaretIsAlpha := index = 1 or: [
+		self isWordCharacterAt: index in: string ].
 
-	[
-	| nextCharacterInDirection |
-	"If we reach the end"
+	index <= 1 ifTrue: [ ^ index ].	
+	nextCharacterInDirection := string at: index - 1.
+	nextCharacterInDirection = Character cr
+		ifTrue: [ ^ index ].
+	
+	afterCaretIsAlpha ifFalse: [ index := index - 1 ].
+
+	[ "If we reach the end"
 	index <= 1 ifTrue: [ ^ index ].
 
 	nextCharacterInDirection := string at: index - 1.
-	nextCharacterInDirection = Character cr ifTrue: [ ^ index ].
+	nextCharacterInDirection = Character cr
+		ifTrue: [ ^ index ].
 
-	(stopOnUpperCase and: [ (string at: index) isUppercase ]) ifTrue: [
-		^ index ].
+	afterCaretIsAlpha := index = 1 or: [
+		                      self isWordCharacterAt: index in: string except: [ :char | stopOnUpperCase and: [ char isUppercase ] ] ].
+	beforeCaretIsAlpha := index = 1 or: [
+		                      self isWordCharacterAt: index - 1 in: string ].
 
-	(self isWordCharacterAt: index - 1 in: string) = initialIsAlphaNumeric ]
+	beforeCaretIsAlpha = afterCaretIsAlpha and: [ index > 1 ] ]
 		whileTrue: [ index := index - 1 ].
 	^ index
 ]
@@ -2724,6 +2805,23 @@ RubTextEditor >> walkAlongDisplayedLine [
 RubTextEditor >> wordAtCaret [
 
 	^self paragraph text asString wordBefore: self startIndex - 1
+]
+
+{ #category : 'accessing' }
+RubTextEditor >> wordGroupAt: index in: aString [
+
+	| character |
+	character := aString at: index.
+
+	character isSeparator ifTrue: [ ^ #separator ].
+	character isAlphaNumeric ifTrue: [
+		character isUppercase
+			ifTrue: [ ^ #upper ]
+			ifFalse: [ ^ #lower ] ].
+
+	character isSpecialSyntaxValid ifTrue: [ ^ #syntax ].
+
+	^ #binary
 ]
 
 { #category : 'accessing - selection' }
