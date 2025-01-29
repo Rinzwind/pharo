@@ -7,41 +7,29 @@ Class {
 }
 
 { #category : 'tests' }
-ReDeadBlockRuleTest >> testRule [ 
+ReDeadBlockRuleTest >> testRule [
 
-	| critiques | 
-	
 	self class compile: 'method [ self foo ]' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assert: critiques size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReDeadBlockRuleTest >> testRuleNotViolatedIfBlockAssigned [
 
-	| critiques | 
-	
 	self class compile: 'method | temp |  temp := [ self foo ] ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques  ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReDeadBlockRuleTest >> testRuleNotViolatedIfMessageSendToIt [
 
-	| critiques | 
-	
 	self class compile: 'method [ self foo ] value ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques  ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReDeadBlockRuleTest >> testRuleNotViolatedIfReturned [
 
-	| critiques | 
-	
 	self class compile: 'method ^ [ self foo ] ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques  ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]

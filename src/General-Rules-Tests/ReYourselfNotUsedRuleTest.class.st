@@ -9,25 +9,13 @@ Class {
 { #category : 'tests' }
 ReYourselfNotUsedRuleTest >> testRule [
 
-	| critiques |
-	self class
-		compile: 'methodTest self class yourself'
-		classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #methodTest.
-	self assert: critiques size equals: 1.
-	 ] ensure: [
-		(self class >> #methodTest) removeFromSystem ]
+	self class compile: 'methodTest self class yourself' classified: 'test-helper'.
+	[ self assert: (self myCritiquesOnMethod: self class >> #methodTest) size equals: 1 ] ensure: [ (self class >> #methodTest) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReYourselfNotUsedRuleTest >> testRuleNotViolated [
 
-	| critiques |
-	self class
-		compile: 'methodTest ^ self yourself'
-		classified: 'test-helper'.
-	[critiques := self myCritiquesOnMethod: self class >> #methodTest.
-	self assertEmpty: critiques.
-	] ensure: [
-		(self class >> #methodTest) removeFromSystem ]
+	self class compile: 'methodTest ^ self yourself' classified: 'test-helper'.
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #methodTest) ] ensure: [ (self class >> #methodTest) removeFromSystem ]
 ]

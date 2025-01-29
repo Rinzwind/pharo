@@ -12,51 +12,29 @@ Class {
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleNotViolated [
 
-	| critiques |
-	self class
-		compile: 'initialize super initialize. 3+4'
-		classified: 'initialization'.
-	[
-	critiques := self myCritiquesOnMethod: self class >> #initialize.
-	self assertEmpty: critiques ] ensure: [
-		(self class >> #initialize) removeFromSystem ]
+	self class compile: 'initialize super initialize. 3+4' classified: 'initialization'.
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize) ] ensure: [ (self class >> #initialize) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleNotViolatedWithTemps [
 
-	| critiques |
-	self class
-		compile: 'initialize |a| super initialize. a := 3+4'
-		classified: 'initialization'.
-	[
-	critiques := self myCritiquesOnMethod: self class >> #initialize.
-	self assertEmpty: critiques ] ensure: [
-		(self class >> #initialize) removeFromSystem ]
+	self class compile: 'initialize |a| super initialize. a := 3+4' classified: 'initialization'.
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize) ] ensure: [ (self class >> #initialize) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleViolated [
 
-	| critiques |
-	self class
-		compile: 'initialize 3+4'
-		classified: 'initialization'.
-	[
-	critiques := self myCritiquesOnMethod: self class >> #initialize.
-		self assert: critiques first rule class equals: ReShouldSendSuperInitializeAsFirstMessage  ] ensure: [
+	self class compile: 'initialize 3+4' classified: 'initialization'.
+	[ self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage ] ensure: [
 		(self class >> #initialize) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleViolatedWithTemps [
 
-	| critiques |
-	self class
-		compile: 'initialize |a| a := 3+4'
-		classified: 'initialization'.
-	[
-	critiques := self myCritiquesOnMethod: self class >> #initialize.
-		self assert: critiques first rule class equals: ReShouldSendSuperInitializeAsFirstMessage  ] ensure: [
+	self class compile: 'initialize |a| a := 3+4' classified: 'initialization'.
+	[ self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage ] ensure: [
 		(self class >> #initialize) removeFromSystem ]
 ]

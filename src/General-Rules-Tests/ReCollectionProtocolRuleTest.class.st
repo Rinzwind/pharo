@@ -13,7 +13,6 @@ Class {
 ReCollectionProtocolRuleTest >> testRule [
 
 	self generateMethod: 'method | set col | set := #(1 2 3). col := OrderedCollection new. set do: [ :number | col add: number ] '.
-
 	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 

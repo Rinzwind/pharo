@@ -13,20 +13,14 @@ Class {
 ReGuardClauseRuleTest >> testRule [
 
 	self class compile: 'method | arg | arg := 1. arg > 2 ifTrue: [ 1. 1. ] ' classified: 'test-helper'.
-	[
-	| critiques |
-	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assert: critiques size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReGuardClauseRuleTest >> testRuleNotViolated [
 
-	| critiques |
 	self class compile: 'method | arg | arg := 1. arg > 2 ifFalse: [ ^ self ]. 1. 1. ' classified: 'test-helper'.
-	[
-	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
@@ -43,8 +37,5 @@ ReGuardClauseRuleTest >> testRuleNotViolatedRegressionTest [
 		self hash ].
 	self hash'
 		classified: 'test-helper'.
-	[
-	| critiques |
-	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]

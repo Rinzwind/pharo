@@ -7,21 +7,15 @@ Class {
 }
 
 { #category : 'tests' }
-ReUnoptimizedToDoRuleTest >> testRule [ 
+ReUnoptimizedToDoRuleTest >> testRule [
 
-	| critiques | 
-	
 	self class compile: 'method (1 to: 10) do: [ :each | each ] ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assert: critiques size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
 ReUnoptimizedToDoRuleTest >> testRuleNotViolated [
 
-	| critiques | 
-	
 	self class compile: 'method 1 to: 10 do: [ :each | each ] ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]

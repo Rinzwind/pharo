@@ -10,7 +10,6 @@ Class {
 ReEquivalentSuperclassMethodsRuleTest >> testRule [
 
 	self generateMethod: 'myCritiques ^ self myCritiquesOnMethod: self class >> #sampleMethod'.
-
 	self assert: (self myCritiquesOnMethod: self class >> #myCritiques) size equals: 1
 ]
 
@@ -18,6 +17,5 @@ ReEquivalentSuperclassMethodsRuleTest >> testRule [
 ReEquivalentSuperclassMethodsRuleTest >> testRuleNotViolated [
 
 	self generateMethod: 'myCritiques ^true'.
-
 	self assertEmpty: (self myCritiquesOnMethod: self class >> #myCritiques)
 ]

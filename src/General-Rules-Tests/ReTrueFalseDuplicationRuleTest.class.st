@@ -7,21 +7,15 @@ Class {
 }
 
 { #category : 'tests' }
-ReTrueFalseDuplicationRuleTest >> testRule [ 
+ReTrueFalseDuplicationRuleTest >> testRule [
 
-	| critiques | 
-	
 	self class compile: 'method self conditional ifTrue: [ self foo. self bar] ifFalse: [ self foo. self ornicar ].  ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method. 
-	self assert: critiques size equals: 1] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
 
 { #category : 'tests' }
-ReTrueFalseDuplicationRuleTest >> testRuleNotViolated [ 
+ReTrueFalseDuplicationRuleTest >> testRuleNotViolated [
 
-	| critiques | 
-	
 	self class compile: 'method self foo. self conditional ifTrue: [ self bar ] ifFalse: [ self ornicar ].  ' classified: 'test-helper'.
-	[ critiques := self myCritiquesOnMethod: self class >> #method. 
-	self assertEmpty: critiques ] ensure: [ (self class >> #method) removeFromSystem ]
+	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
 ]
