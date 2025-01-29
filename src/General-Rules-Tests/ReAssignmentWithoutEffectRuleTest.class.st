@@ -10,20 +10,18 @@ Class {
 ReAssignmentWithoutEffectRuleTest >> testRule [
 
 	| critiques |
-	self class compile: 'method |x| x:=x' classified: 'test-helper'.
-	[
+	self generateMethod: 'method |x| x:=x' classified: 'test-helper'.
+
 	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assert: critiques size equals: 1 ] ensure: [
-		(self class >> #method) removeFromSystem ]
+	self assert: critiques size equals: 1
 ]
 
 { #category : 'tests' }
 ReAssignmentWithoutEffectRuleTest >> testRuleNotViolated [
 
 	| critiques |
-	self class compile: 'method |x| x:=1' classified: 'test-helper'.
-	[
+	self generateMethod: 'method |x| x:=1' classified: 'test-helper'.
+
 	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques ] ensure: [
-		(self class >> #method) removeFromSystem ]
+	self assertEmpty: critiques
 ]
