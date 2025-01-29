@@ -9,19 +9,13 @@ Class {
 { #category : 'tests' }
 ReAssignmentWithoutEffectRuleTest >> testRule [
 
-	| critiques |
-	self generateMethod: 'method |x| x:=x' classified: 'test-helper'.
-
-	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assert: critiques size equals: 1
+	self generateMethod: 'method |x| x:=x'.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReAssignmentWithoutEffectRuleTest >> testRuleNotViolated [
 
-	| critiques |
-	self generateMethod: 'method |x| x:=1' classified: 'test-helper'.
-
-	critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques
+	self generateMethod: 'method |x| x:=1'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]

@@ -17,6 +17,5 @@ ReBetweenAndRuleTest >> testRule [
 ReBetweenAndRuleTest >> testRuleNotViolated [
 
 	self generateMethod: 'a:a b:b c:c a between: b and: c'.
-
 	self assertEmpty: (self myCritiquesOnMethod: self class >> #a:b:c:)
 ]
