@@ -9,15 +9,15 @@ Class {
 { #category : 'tests' }
 ReInconsistentMethodClassificationRuleTest >> testRule [
 
-	self class compile: 'myCritiques super myCritiques' classified: 'accessing'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #myCritiques) size equals: 1 ] ensure: [ (self class >> #myCritiques) removeFromSystem ].
-	self class compile: 'initialize super initialize' classified: 'accessing'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #initialize) size equals: 1 ] ensure: [ (self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'myCritiques super myCritiques' classified: 'accessing'.
+	self assert: (self myCritiquesOnMethod: self class >> #myCritiques) size equals: 1.
+	self generateMethod: 'initialize super initialize' classified: 'accessing'.
+	self assert: (self myCritiquesOnMethod: self class >> #initialize) size equals: 1
 ]
 
 { #category : 'tests' }
 ReInconsistentMethodClassificationRuleTest >> testRuleNotViolated [
 
-	self class compile: 'initialize super initialize' classified: 'initialization'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize) ] ensure: [ (self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'initialize super initialize' classified: 'initialization'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize)
 ]

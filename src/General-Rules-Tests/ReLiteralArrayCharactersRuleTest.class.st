@@ -9,13 +9,13 @@ Class {
 { #category : 'tests' }
 ReLiteralArrayCharactersRuleTest >> testRule [
 
-	self class compile: 'method ^ #($a $b $c)' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method ^ #($a $b $c)'.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReLiteralArrayCharactersRuleTest >> testRuleNotViolated [
 
-	self class compile: 'method ^ #($a $b 1)' classified: 'test-helper'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method ^ #($a $b 1)'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]

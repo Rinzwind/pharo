@@ -9,13 +9,13 @@ Class {
 { #category : 'tests' }
 ReIfTrueIfFalseUselessRuleTest >> testRule [
 
-	self class compile: 'method 1 = 1 ifTrue: [ ^ true ] ifFalse: [ ^ false ] ' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method 1 = 1 ifTrue: [ ^ true ] ifFalse: [ ^ false ] '.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReIfTrueIfFalseUselessRuleTest >> testRuleNotViolated [
 
-	self class compile: 'method ^ ((1 = 1) & (2 = 2)) ' classified: 'test-helper'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method ^ ((1 = 1) & (2 = 2))'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]

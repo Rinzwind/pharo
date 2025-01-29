@@ -9,20 +9,20 @@ Class {
 { #category : 'tests' }
 ReEqualsTrueRuleTest >> testRule [
 
-	self class compile: 'method: isFoo ^ isFoo == false ' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method:) size equals: 1 ] ensure: [ (self class >> #method:) removeFromSystem ]
+	self generateMethod: 'method: isFoo ^ isFoo == false '.
+	self assert: (self myCritiquesOnMethod: self class >> #method:) size equals: 1
 ]
 
 { #category : 'tests' }
 ReEqualsTrueRuleTest >> testRuleNotViolated [
 
-	self class compile: 'method: isFoo ^ isFoo ' classified: 'test-helper'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method:) ] ensure: [ (self class >> #method:) removeFromSystem ]
+	self generateMethod: 'method: isFoo ^ isFoo '.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method:)
 ]
 
 { #category : 'tests' }
 ReEqualsTrueRuleTest >> testRuleWithBoolAsArgument [
 
-	self class compile: 'method: isFoo ^ true == isFoo ' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method:) size equals: 1 ] ensure: [ (self class >> #method:) removeFromSystem ]
+	self generateMethod: 'method: isFoo ^ true == isFoo '.
+	self assert: (self myCritiquesOnMethod: self class >> #method:) size equals: 1
 ]
