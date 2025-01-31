@@ -110,6 +110,13 @@ TaskListMorph >> handlesKeyboard: evt [
 	^true
 ]
 
+{ #category : 'testing' }
+TaskListMorph >> hasAllWindows [
+
+	^ self tasks includesAll: self currentWorld taskbarTasks
+
+]
+
 { #category : 'initialization' }
 TaskListMorph >> initialize [
 	"Initialize the receiver."
@@ -151,9 +158,7 @@ TaskListMorph >> initializeLayout [
 TaskListMorph >> initializeTasks [
 	"Set up the current tasks."
 
-	self tasks: ((self currentWorld submorphs
-		collect: [:m | m taskbarTask])
-		select: [:m | m isNotNil]) asOrderedCollection
+	self tasks: self currentWorld taskbarTasks
 ]
 
 { #category : 'settings' }
