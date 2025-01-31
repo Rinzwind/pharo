@@ -100,10 +100,10 @@ TaskListMorph >> handlesKeyboard: evt [
 ]
 
 { #category : 'testing' }
-TaskListMorph >> hasAllWindows [
+TaskListMorph >> hasCurrentWindows: currentTasks [
 
-	^ self tasks includesAll: self currentWorld taskbarTasks
-
+	^ (self tasks includesAll: currentTasks) and: [
+		  currentTasks includesAll: self tasks ]
 ]
 
 { #category : 'initialization' }

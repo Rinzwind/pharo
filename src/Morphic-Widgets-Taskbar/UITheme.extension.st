@@ -43,8 +43,8 @@ UITheme >> openTaskListIn: world from: aKeyboardEvent [
 	tasklistMorph
 		ifNil: [ tasklistMorph := TaskListMorph new ]
 		ifNotNil: [
-			tasklistMorph hasAllWindows ifFalse: [
-				tasklistMorph := TaskListMorph new ] ].
+			(tasklistMorph hasCurrentWindows: self currentWorld taskbarTasks)
+				ifFalse: [ tasklistMorph := TaskListMorph new ] ].
 
 	aKeyboardEvent shiftPressed
 		ifTrue: [ tasklistMorph selectNextTask ]
