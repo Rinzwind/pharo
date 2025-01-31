@@ -17,17 +17,6 @@ Class {
 	#package : 'Morphic-Widgets-Taskbar'
 }
 
-{ #category : 'instance creation' }
-TaskListMorph class >> from: aKeyboardEvent [
-
-	| instance |
-	instance := self new.
-	aKeyboardEvent shiftPressed
-		ifTrue: [ instance selectNextTask ]
-		ifFalse: [ instance selectPreviousTask ].
-	^ instance
-]
-
 { #category : 'testing' }
 TaskListMorph class >> isNavigationEvent: aKeyboardEvent [
 
