@@ -23,8 +23,7 @@ Class {
 		'focusIndicator',
 		'windowActiveDropShadowStyle',
 		'useScrollbarThumbShadow',
-		'colorPalette',
-		'tasklistMorph'
+		'colorPalette'
 	],
 	#classVars : [
 		'Builder',
