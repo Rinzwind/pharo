@@ -3,10 +3,12 @@ A TaskbarMorphTest is a test class for testing the behavior of TaskbarMorph
 "
 Class {
 	#name : 'TaskbarMorphTest',
-	#superclass : 'TaskMorphTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'taskbar',
-		'world'
+		'world',
+		'windows',
+		'tasks'
 	],
 	#category : 'Morphic-Widgets-Taskbar-Tests',
 	#package : 'Morphic-Widgets-Taskbar-Tests'
@@ -17,8 +19,8 @@ TaskbarMorphTest >> addTaskWithWindow [
 
 	| newTask morph |
 	morph := SystemWindow new.
-	newTask := self newTaskFor: morph.
-"	self orderedTasks add: newTask."
+	newTask := taskbar newTaskFor: morph.
+	self orderedTasks add: newTask.
 	^ newTask
 ]
 
@@ -33,6 +35,15 @@ TaskbarMorphTest >> addWindowToWorld [
 	morph := Morph new.
 	windows add: morph.
 	^morph
+]
+
+{ #category : 'mocking taskbar' }
+TaskbarMorphTest >> newTaskFor: window [
+	^ TaskbarTask
+		morph: window
+		state: #aNilState
+		icon: nil
+		label: 'a Label'
 ]
 
 { #category : 'mocking taskbar' }
@@ -54,6 +65,14 @@ TaskbarMorphTest >> putOnTop: aMorph [
 { #category : 'mocking world' }
 TaskbarMorphTest >> removeWindow: aMorph [
 	windows remove: aMorph
+]
+
+{ #category : 'running' }
+TaskbarMorphTest >> setUp [
+	super setUp.
+	windows := OrderedCollection new.
+	tasks := OrderedCollection new.
+	self theMethodInProdThatShouldBeTested
 ]
 
 { #category : 'mocking taskbar' }
