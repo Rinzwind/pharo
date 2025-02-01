@@ -119,13 +119,15 @@ Morph class >> morphNavigationShortcutsOn: aBuilder [
 
 	<keymap>
 	(aBuilder shortcut: #navigateFocusForwardCtrl)
-		category: #MorphFocusCtrlNavigation
+		category: #MorphNavigation
 		default: Character tab ctrl asKeyCombination
-		do: [ :target :morph :event | morph navigateFocusForward ].
+		do: [ :target :morph :event |
+			morph world theme openTaskListIn: morph world from: event ].
 	(aBuilder shortcut: #navigateFocusBackwardCtrl)
-		category: #MorphFocusCtrlNavigation
+		category: #MorphNavigation
 		default: Character tab shift ctrl asKeyCombination
-		do: [ :target :morph :event | morph navigateFocusBackward ].
+		do: [ :target :morph :event |
+			morph world theme openTaskListIn: morph world from: event ].
 	(aBuilder shortcut: #navigateFocusForward)
 		category: #MorphFocusNavigation
 		default: Character tab asKeyCombination
