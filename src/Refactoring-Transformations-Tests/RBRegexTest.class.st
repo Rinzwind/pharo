@@ -1,12 +1,12 @@
 Class {
-	#name : 'RBRegexText',
+	#name : 'RBRegexTest',
 	#superclass : 'TestCase',
 	#category : 'Refactoring-Transformations-Tests',
 	#package : 'Refactoring-Transformations-Tests'
 }
 
 { #category : 'tests' }
-RBRegexText >> testRegexWithNoStartingAcronym [
+RBRegexTest >> testRegexWithNoStartingAcronym [
 	
 	| refact |
 	refact := RBRegexRefactoring new replace: '^(.*)$' with: 'RB','$1'. 
@@ -15,7 +15,7 @@ RBRegexText >> testRegexWithNoStartingAcronym [
 ]
 
 { #category : 'tests' }
-RBRegexText >> testRegexWithTwoAcronyms [
+RBRegexTest >> testRegexWithTwoAcronyms [
 	
 	| refact |
 	refact := RBRegexRefactoring new replace: '^YK(.*)$' with: 'RB','$1'. 
