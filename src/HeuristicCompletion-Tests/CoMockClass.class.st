@@ -9,7 +9,8 @@ Class {
 		'classVariables',
 		'superclass',
 		'methodDictionary',
-		'sharedPools'
+		'sharedPools',
+		'name'
 	],
 	#category : 'HeuristicCompletion-Tests-Core',
 	#package : 'HeuristicCompletion-Tests',
@@ -103,6 +104,18 @@ CoMockClass >> methodAt: aString put: aCoMockMethod [
 
 	methodDictionary at: aString asSymbol put: aCoMockMethod.
 	aCoMockMethod methodClass: self
+]
+
+{ #category : 'accessing' }
+CoMockClass >> name [
+
+	^ name
+]
+
+{ #category : 'accessing' }
+CoMockClass >> name: aString [
+
+	name := aString
 ]
 
 { #category : 'accessing' }

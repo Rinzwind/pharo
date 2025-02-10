@@ -41,7 +41,7 @@ SycShowMethodVersionCommand >> description [
 
 { #category : 'execution' }
 SycShowMethodVersionCommand >> execute [
-	Smalltalk tools versionBrowser browseVersionsForMethod: method
+	(Smalltalk tools toolNamed: #versionBrowser) browseVersionsForMethod: method
 ]
 
 { #category : 'execution' }

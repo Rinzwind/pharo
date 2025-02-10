@@ -29,7 +29,7 @@ SycSuperclassImplementorsCommand >> description [
 { #category : 'execution' }
 SycSuperclassImplementorsCommand >> execute [
 
-	Smalltalk tools messageList browse: self searchInTheWholeHierarchy.
+	(Smalltalk tools toolNamed: #messageList) browse: self searchInTheWholeHierarchy.
 ]
 
 { #category : 'execution' }
