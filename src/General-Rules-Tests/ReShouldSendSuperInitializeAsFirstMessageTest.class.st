@@ -12,29 +12,27 @@ Class {
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleNotViolated [
 
-	self class compile: 'initialize super initialize. 3+4' classified: 'initialization'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize) ] ensure: [ (self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'initialize super initialize. 3+4' classified: 'initialization'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize)
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleNotViolatedWithTemps [
 
-	self class compile: 'initialize |a| super initialize. a := 3+4' classified: 'initialization'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize) ] ensure: [ (self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'initialize |a| super initialize. a := 3+4' classified: 'initialization'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #initialize)
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleViolated [
 
-	self class compile: 'initialize 3+4' classified: 'initialization'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage ] ensure: [
-		(self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'initialize 3+4' classified: 'initialization'.
+	self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage
 ]
 
 { #category : 'tests' }
 ReShouldSendSuperInitializeAsFirstMessageTest >> testRuleViolatedWithTemps [
 
-	self class compile: 'initialize |a| a := 3+4' classified: 'initialization'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage ] ensure: [
-		(self class >> #initialize) removeFromSystem ]
+	self generateMethod: 'initialize |a| a := 3+4' classified: 'initialization'.
+	self assert: (self myCritiquesOnMethod: self class >> #initialize) first rule class equals: ReShouldSendSuperInitializeAsFirstMessage
 ]
