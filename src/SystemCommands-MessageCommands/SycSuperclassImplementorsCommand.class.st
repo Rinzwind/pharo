@@ -20,6 +20,12 @@ SycSuperclassImplementorsCommand >> defaultMenuItemName [
 	^ 'Hierarchical implementors'
 ]
 
+{ #category : 'accessing' }
+SycSuperclassImplementorsCommand >> description [
+
+	^ 'Finds Hierarchical implementors'
+]
+
 { #category : 'execution' }
 SycSuperclassImplementorsCommand >> execute [
 

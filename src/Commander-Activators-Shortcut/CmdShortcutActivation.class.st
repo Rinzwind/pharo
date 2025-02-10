@@ -83,9 +83,7 @@ CmdShortcutActivation >> action [
 CmdShortcutActivation >> description [
 	"Answer a <String> describing the receiver. We use the `action` method comments to retrieve the description"
 
-	^ self action comment
-		ifNil: [ String empty ]
-		ifNotNil: [ : comm | comm ]
+	^ self annotatedClass new description
 ]
 
 { #category : 'accessing' }

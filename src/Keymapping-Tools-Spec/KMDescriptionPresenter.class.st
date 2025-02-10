@@ -143,7 +143,7 @@ KMDescriptionPresenter >> initializePresenters [
 	actionBar := self newActionBar.
 	actionBar
 		addLast: (SpButtonPresenter new
-				 action: [ "self application tools browser openOn:" shortcutTable selectedItem action browser ];
+				 action: [ (self application tools toolNamed: #browser) openOnClass:   shortcutTable selectedItem action methodClass  selector: shortcutTable selectedItem action selector ];
 				 label: 'Browse';
 				 yourself);
 		addLast: (SpButtonPresenter new
@@ -155,6 +155,7 @@ KMDescriptionPresenter >> initializePresenters [
 { #category : 'callbacks' }
 KMDescriptionPresenter >> keymapsAtCategory: aKMCategoryOrKMCategoryAll [
 	"Answer a <Collection> of keymaps"
+
 	^ aKMCategoryOrKMCategoryAll shortcuts
 ]
 
