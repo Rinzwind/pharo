@@ -9,13 +9,13 @@ Class {
 { #category : 'tests' }
 ReTemporaryNeitherReadNorWrittenRuleTest >> testRule [
 
-	self class compile: 'method |unused|' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method |unused|'.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReTemporaryNeitherReadNorWrittenRuleTest >> testRuleNotViolated [
 
-	self class compile: 'method |used| used := 1. ^used' classified: 'test-helper'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method |used| used := 1. ^used'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]

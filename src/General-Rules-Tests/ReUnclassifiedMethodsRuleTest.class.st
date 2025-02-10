@@ -9,13 +9,13 @@ Class {
 { #category : 'tests' }
 ReUnclassifiedMethodsRuleTest >> testRule [
 
-	self class compile: 'method'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method' classified: Protocol unclassified.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReUnclassifiedMethodsRuleTest >> testRuleNotViolated [
 
-	self class compile: 'method ^ 1' classified: 'test-helper'.
-	[ self assertEmpty: (self myCritiquesOnMethod: self class >> #method) ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method ^ 1' classified: 'accessing'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]

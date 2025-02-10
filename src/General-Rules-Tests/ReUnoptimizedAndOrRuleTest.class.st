@@ -9,16 +9,13 @@ Class {
 { #category : 'tests' }
 ReUnoptimizedAndOrRuleTest >> testRule [
 
-	self class compile: 'method (true and: false) and: true' classified: 'test-helper'.
-	[ self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1 ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method (true and: false) and: true'.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
 ]
 
 { #category : 'tests' }
 ReUnoptimizedAndOrRuleTest >> testRuleNotViolated [
 
-	| critiques | 
-	
-	self class compile: 'method true and: [ false and: [ true ] ]' classified: 'test-helper'. 
-	[ critiques := self myCritiquesOnMethod: self class >> #method.
-	self assertEmpty: critiques ] ensure: [ (self class >> #method) removeFromSystem ]
+	self generateMethod: 'method true and: [ false and: [ true ] ]'.
+	self assertEmpty: (self myCritiquesOnMethod: self class >> #method)
 ]
