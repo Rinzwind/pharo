@@ -517,7 +517,7 @@ SystemWindow class >> windowMenuOn: aBuilder [
 		                 ifFalse: [ #Maximize ].
 	(aBuilder item: maximizeLabel)
 		action: [ aBuilder model expandBoxHit ];
-		iconName: #windowMaximizeForm
+		iconName: #windowMaximize
 ]
 
 { #category : 'top window' }
