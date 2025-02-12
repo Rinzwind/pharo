@@ -5,12 +5,12 @@ Class {
 	#name : 'CoMockClass',
 	#superclass : 'Object',
 	#instVars : [
+		'package',
 		'instanceVariables',
 		'classVariables',
 		'superclass',
 		'methodDictionary',
 		'sharedPools',
-		'package',
 		'name'
 	],
 	#category : 'HeuristicCompletion-Tests-Mocks',
