@@ -5,6 +5,7 @@ Class {
 	#name : 'CoMockClass',
 	#superclass : 'Object',
 	#instVars : [
+		'package',
 		'instanceVariables',
 		'classVariables',
 		'superclass',
@@ -12,9 +13,9 @@ Class {
 		'sharedPools',
 		'name'
 	],
-	#category : 'HeuristicCompletion-Tests-Core',
+	#category : 'HeuristicCompletion-Tests-Mocks',
 	#package : 'HeuristicCompletion-Tests',
-	#tag : 'Core'
+	#tag : 'Mocks'
 }
 
 { #category : 'configuration' }
@@ -116,6 +117,18 @@ CoMockClass >> name [
 CoMockClass >> name: aString [
 
 	name := aString
+]
+
+{ #category : 'accessing' }
+CoMockClass >> package [
+
+	^ package
+]
+
+{ #category : 'accessing' }
+CoMockClass >> package: anObject [
+
+	package := anObject
 ]
 
 { #category : 'accessing' }
